@@ -32,8 +32,8 @@ class SAQ extends Modele {
 	 * @param int $nombre
 	 * @param int $debut
 	 */
-	public function getProduits($nombre = 24, $page = 1) {
-		$s = curl_init();
+	public function getProduits($nombre, $page) {
+		$s = curl_init(); /* Ressemble un peu au git init, curl_init initialise une session cURL  */
 		$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=".$page."&product_list_limit=".$nombre."&product_list_order=name_asc";
 		//curl_setopt($s, CURLOPT_URL, "http://www.saq.com/webapp/wcs/stores/servlet/SearchDisplay?searchType=&orderBy=&categoryIdentifier=06&showOnly=product&langId=-2&beginIndex=".$debut."&tri=&metaData=YWRpX2YxOjA8TVRAU1A%2BYWRpX2Y5OjE%3D&pageSize=". $nombre ."&catalogId=50000&searchTerm=*&sensTri=&pageView=&facet=&categoryId=39919&storeId=20002");
 		//curl_setopt($s, CURLOPT_URL, "https://www.saq.com/webapp/wcs/stores/servlet/SearchDisplay?categoryIdentifier=06&showOnly=product&langId=-2&beginIndex=" . $debut . "&pageSize=" . $nombre . "&catalogId=50000&searchTerm=*&categoryId=39919&storeId=20002");
@@ -44,23 +44,33 @@ class SAQ extends Modele {
 		//curl_setopt($s, CURLOPT_FOLLOWLOCATION, 1);
 
         // Se prendre pour un navigateur pour berner le serveur de la saq...
+		// curl_setopt_array est pour définir les options de configuation de notre CURL. le $s est seulement l'initialisation de curl déclaré plus haut. 
         curl_setopt_array($s,array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => $url, // pour définir l'URL de la requête à effectuer. 
+			
+            CURLOPT_RETURNTRANSFER => true, /* True pour retourner en string */
             CURLOPT_USERAGENT=>'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0',
+			/* Choisir sur quel navigateur la requête http va se faire.  */
             CURLOPT_ENCODING=>'gzip, deflate',
+			/* On accepte ce type de compression, une méthode de compression de données. Indentity indique qu'on accepte aucune compression ou modification supplémentaire. */
             CURLOPT_HTTPHEADER=>array(
                     'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+					/* Qu'on accepte ce type de contenu pour la réponse, le q est pour la qualité  */
                     'Accept-Language: en-US,en;q=0.5',
+					/* On veut que la réponse soit en en-US, en(english) générique et préférence de qualité 0.5 */
                     'Accept-Encoding: gzip, deflate',
+					/* Qu'on accepte ce type d'encodage */
                     'Connection: keep-alive',
+					/* La connexion TCP doit être maintenu ouverte apres la reponse, afin de pouvoir réutilisé pour des requêtes ultérieures */
                     'Upgrade-Insecure-Requests: 1',
+					/* MEttre http à https pour les ressources qui supporte https, la valeur 1 indique que le client est prêt à effectuer cette mise à niveau */
             ),
     ));
 
-		self::$_webpage = curl_exec($s);
-		self::$_status = curl_getinfo($s, CURLINFO_HTTP_CODE);
-		curl_close($s);
+		self::$_webpage = curl_exec($s); /* On execute les options définies plus haut avec curl_setopt_array */
+		self::$_status = curl_getinfo($s, CURLINFO_HTTP_CODE); /* POur avoir le status le code de statut, pour obtenir  des information sur la requête */
+		curl_close($s); /* Fermer la session cURL  */
+	
 
 		$doc = new DOMDocument();
 		$doc -> recover = true;
