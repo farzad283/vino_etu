@@ -48,7 +48,8 @@ class Controler
 		private function voirInfo()
 		{
 			$bte = new SAQ(); /* Instantiation de la classe SAQ pour récupérer et ajouter les  */
-            $data = $bte->getProduits(24,6); /* Le nombre que vous voulez, 24-48-92 et la page. */
+            $data = $bte->getProduits(24
+			,6); /* Le nombre que vous voulez, 24-48-92 et la page. */
 			include("vues/entete.php");
 			include("vues/info.php");
 			include("vues/pied.php");

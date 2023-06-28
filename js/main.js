@@ -8,8 +8,9 @@
  *
  */
 
-//const BaseURL = "https://jmartel.webdev.cmaisonneuve.qc.ca/n61/vino/";
-const BaseURL = document.baseURI;
+const BaseURL = "https://jmartel.webdev.cmaisonneuve.qc.ca/n61/vino/";
+// const BaseURL = "http://localhost:8888/Vino-etu-far/vino_etu/";
+// const BaseURL = document.baseURI;
 console.log(BaseURL);
 window.addEventListener('load', function() {
     console.log("load");
